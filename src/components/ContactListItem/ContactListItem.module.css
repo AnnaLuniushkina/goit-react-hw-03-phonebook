@@ -1,0 +1,13 @@
+.contactListItem {
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contactListItem__button {
+    height: 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: rgb(175, 207, 236);
+    cursor: pointer;
+}
