@@ -1,26 +1,26 @@
-import React from "react";
 import PropTypes from 'prop-types';
 import styles from './ContactListItem.module.css';
 
 const ContactListItem = ({ contact, onDelete }) => {
     const { id, name, number } = contact;
     return (
-        <li
+    <li
+        key={id}
             className={styles.contactListItem}>
             {name}: {number}
-            <button
-                className={styles.contactListItem__button}
+        <button
+            className={styles.contactListItem__button}
             type='button'
-                id={id}
-                onClick={event => {
-                    onDelete(event.target.id);
-            }}>
-                Delete
-            </button>
-        </li>
-    )
-    
-}
+            id={id}
+            onClick={event => {
+                onDelete(event.target.id)
+            }}
+        >
+            Delete
+        </button>
+    </li>
+    );
+};
 
 ContactListItem.propTypes = {
     contact: PropTypes.shape({

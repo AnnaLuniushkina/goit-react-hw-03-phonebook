@@ -6,37 +6,25 @@ import FilterContact from "./FilterContact/FilterContact";
 
 class App extends Component {
   state = {
-    contacts: [
-    {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
-    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-    {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
-    ],
+    contacts: [],
     filter: '',
   }
-
-  contactsId = shortid.generate();
 
   filterChange = event => {
     const { name, value } = event.currentTarget;
     this.setState({ [name]: value });
   }
 
-  contactsFilter = value => {
-    const normalizeFilter = value.toLowerCase();
+  contactsFilter = name => {
 
-    return this.state.contacts.filter(contact => {
-      return contact.name.toLowerCase().includes(normalizeFilter);
-    })
-  }
+    return this.state.contacts.filter(contact => contact.name.toLowerCase().includes(name.toLowerCase())
+    );
+  };
 
   addContact = ({name, number}) => {
-    console.log(name);
-    console.log(number);
-
     this.setState(prevState => {
       const { contacts } = prevState;
-      const newContact = contacts.find(contact => contact.name === name);
+      const newContact = this.state.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase());
 
       if (newContact) {
         alert(`${name} is already in contact`);
@@ -45,7 +33,7 @@ class App extends Component {
         return {
           contacts: [
             {
-              id: this.contactsId,
+              id: shortid(),
               name,
               number,
             },
@@ -58,14 +46,37 @@ class App extends Component {
   };
 
   onDelete = id => {
-    this.setState(prevState => {
-      const { contacts } = prevState;
-      const deleteContacts = contacts.filter(contact => contact.id !== id);
-      return { contacts: [...deleteContacts] };
+    this.setState({
+      contacts: this.state.contacts.filter(contact => contact.id !== id),
     });
   };
 
+  componentDidMount() {
+    console.log('App componentDidMount');
+
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    console.log(parsedContacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('App componentDidUpdate');
+
+    if (this.state.contacts !== prevState.contacts) {
+      console.log('Обновилося поле contacts, записую contacts в localStorage');
+      
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   render() {
+    console.log('App render');
+
     const { filter } = this.state;
     return (
       <>
